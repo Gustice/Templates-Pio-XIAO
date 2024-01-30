@@ -2,7 +2,8 @@
 
 #include "Button.hpp"
 #include "Sound.hpp"
-#include "U8x8lib.h" // Note this depends on package olikraus/U8g2
+#include "U8x8lib.h" // Note: this depends on package olikraus/U8g2
+#include "Time.hpp"// Note: this depends on package adafruit/RTClib
 #include <Arduino.h>
 
 static constexpr Sound::Tone startJingle[]{
@@ -21,6 +22,7 @@ class Board {
     U8X8_SSD1306_128X64_NONAME_HW_I2C display;
     Sound buzzer;
     Button button;
+    Time time;
 
     Board(/* args */) : display(U8X8_PIN_NONE), buzzer(A3), button(ButtonPin) {};
 
@@ -28,5 +30,7 @@ class Board {
         display.begin();
         display.setFlipMode(0);
         display.setFont(u8x8_font_chroma48medium8_r);
+        time.begin();
     }
 };
+

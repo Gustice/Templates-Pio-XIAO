@@ -4,6 +4,7 @@ const int BlinkTime = 50;
 
 static StatusLed _statusLed(LED_BUILTIN, StatusLed::LedLogic::Inverted);
 static RotatingIndex<int> _tickIdx(16);
+static RotatingIndex<int> _timeTick(1000 / BlinkTime);
 
 #ifdef EXTENSION_BOARD
 Board board;
@@ -21,6 +22,11 @@ void setup() {
     board.display.setCursor(0, 2);
     board.display.print("Btn=");
     board.buzzer.play(startJingle);
+
+    board.display.setCursor(0, 3);
+    board.display.print(board.time.getDateStringNow().c_str());
+    board.display.setCursor(0, 4);
+    board.display.print(board.time.getTimeStringNow().c_str());
 #endif
 }
 
@@ -43,6 +49,11 @@ void loop() {
         board.buzzer.play(btnPressedSound);
     } else if (btn == Button::BTN_RELEASED) {
         board.buzzer.play(btnReleasedSound);
+    }
+
+    if (_timeTick.IncrementAndCheckIfRevolves()) {
+        board.display.setCursor(0, 4);
+        board.display.print(board.time.getTimeStringNow().c_str());
     }
 #endif
 
