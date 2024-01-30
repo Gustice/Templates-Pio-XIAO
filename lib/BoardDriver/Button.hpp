@@ -11,8 +11,9 @@ class Button {
         BTN_RELEASED,
     };
 
-    eEvents poll();
     Button(int pin);
+    eEvents read();
+    int readRaw();
 
   private:
     const int _pin;

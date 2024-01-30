@@ -5,5 +5,5 @@
 #include "RotatingIndex.hpp"
 
 #ifdef EXTENSION_BOARD
-#include "U8x8lib.h"
+#include "BoardDriver.hpp"
 #endif

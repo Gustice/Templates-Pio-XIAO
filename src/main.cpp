@@ -1,46 +1,26 @@
 #include "main.hpp"
 
-#ifdef EXTENSION_BOARD
-#include "Button.hpp"
-#include "Sound.hpp"
-#endif
-
 const int BlinkTime = 50;
 
 static StatusLed _statusLed(LED_BUILTIN, StatusLed::LedLogic::Inverted);
 static RotatingIndex<int> _tickIdx(16);
 
 #ifdef EXTENSION_BOARD
-U8X8_SSD1306_128X64_NONAME_HW_I2C display(U8X8_PIN_NONE);
-Sound buzzer(A3);
-constexpr int ButtonPin = 1;
-Button button(ButtonPin);
-
-Sound::Tone startJingle[]{
-    {Sound::NOTE_C4, 250},
-    {Sound::NOTE_E4, 250},
-    {Sound::NOTE_PAUSE, 0},
-};
-Sound::Tone btnPressedSound{Sound::NOTE_E3, 125};
-Sound::Tone btnReleasedSound{Sound::NOTE_C3, 125};
+Board board;
 #endif
-
 
 void setup() {
     Serial.begin(9600);
     _statusLed.Set(StatusLed::Mode::DoubleFlash);
 
 #ifdef EXTENSION_BOARD
-    display.begin();
-    display.setFlipMode(0);
-    display.setFont(u8x8_font_chroma48medium8_r);
-
-    display.setCursor(0, 0);
-    display.print("Internal Demo:");
-    display.setCursor(0, 1);
-    display.setCursor(0, 2);
-    display.print("Btn=");
-    buzzer.play(startJingle);
+    board.begin();
+    board.display.setCursor(0, 0);
+    board.display.print("Internal Demo:");
+    board.display.setCursor(0, 1);
+    board.display.setCursor(0, 2);
+    board.display.print("Btn=");
+    board.buzzer.play(startJingle);
 #endif
 }
 
@@ -52,17 +32,17 @@ void loop() {
     Serial.print(".");
 
 #ifdef EXTENSION_BOARD
-    display.clearLine(1);
-    display.setCursor(_tickIdx.GetIndex(), 1);
-    display.print(".");
+    board.display.clearLine(1);
+    board.display.setCursor(_tickIdx.GetIndex(), 1);
+    board.display.print(".");
 
-    display.setCursor(4, 2);
-    display.print(digitalRead(ButtonPin));
-    auto btn = button.poll();
+    board.display.setCursor(4, 2);
+    board.display.print(board.button.readRaw());
+    auto btn = board.button.read();
     if (btn == Button::BTN_PRESSED) {
-        buzzer.play(btnPressedSound);
+        board.buzzer.play(btnPressedSound);
     } else if (btn == Button::BTN_RELEASED) {
-        buzzer.play(btnReleasedSound);
+        board.buzzer.play(btnReleasedSound);
     }
 #endif
 

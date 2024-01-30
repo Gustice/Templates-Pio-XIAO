@@ -109,6 +109,6 @@ class Sound {
     Sound(int speakerPin) {
         _speakerPin = speakerPin;
     }
-    void play(Tone *melody);
-    void play(Tone &note);
+    void play(const Tone * melody);
+    void play(const Tone & note);
 };

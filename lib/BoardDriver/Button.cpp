@@ -7,7 +7,11 @@ Button::Button(int pin) : _pin(pin) {
     _oldState = state;
 }
 
-Button::eEvents Button::poll() {
+int Button::readRaw() {
+    return digitalRead(_pin);
+}
+
+Button::eEvents Button::read() {
     uint32_t state = digitalRead(_pin);
     uint32_t states = ((_oldState & 1) << 1) | (state & 1);
     _oldState = state;
